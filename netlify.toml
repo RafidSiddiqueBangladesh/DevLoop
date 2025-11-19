@@ -1,13 +1,13 @@
 [build]
+  base = "foodwaste"
   command = "npm run build:client"
-  functions = "netlify/functions"
   publish = "dist/spa"
+  functions = "netlify/functions"
 
+[build.environment]
+  PNPM_FLAGS = "--no-frozen-lockfile"
+  NODE_VERSION = "22.21.1"
 
-[functions]
-  external_node_modules = ["express"]
-  node_bundler = "esbuild"
-  
 [[redirects]]
   force = true
   from = "/api/*"
