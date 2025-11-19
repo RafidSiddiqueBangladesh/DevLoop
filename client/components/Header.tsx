@@ -1,10 +1,10 @@
-import { Link } from 'react-router-dom';
-import { useTheme } from '@/context/ThemeContext';
-import { useLanguage } from '@/context/LanguageContext';
-import { useTranslation } from '@/lib/useTranslation';
-import { Moon, Sun, Menu, X } from 'lucide-react';
-import { useState } from 'react';
-import { cn } from '@/lib/utils';
+import { Link } from "react-router-dom";
+import { useTheme } from "@/context/ThemeContext";
+import { useLanguage } from "@/context/LanguageContext";
+import { useTranslation } from "@/lib/useTranslation";
+import { Moon, Sun, Menu, X } from "lucide-react";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 export const Header = () => {
   const { theme, toggleTheme } = useTheme();
@@ -25,20 +25,35 @@ export const Header = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">
-          <Link to="/" className="text-sm font-medium hover:text-primary transition-colors">
-            {t('common.home')}
+          <Link
+            to="/"
+            className="text-sm font-medium hover:text-primary transition-colors"
+          >
+            {t("common.home")}
           </Link>
-          <Link to="/inventory" className="text-sm font-medium hover:text-primary transition-colors">
-            {t('nav.inventory')}
+          <Link
+            to="/inventory"
+            className="text-sm font-medium hover:text-primary transition-colors"
+          >
+            {t("nav.inventory")}
           </Link>
-          <Link to="/resources" className="text-sm font-medium hover:text-primary transition-colors">
-            {t('nav.resources')}
+          <Link
+            to="/resources"
+            className="text-sm font-medium hover:text-primary transition-colors"
+          >
+            {t("nav.resources")}
           </Link>
-          <Link to="/dashboard" className="text-sm font-medium hover:text-primary transition-colors">
-            {t('nav.dashboard')}
+          <Link
+            to="/dashboard"
+            className="text-sm font-medium hover:text-primary transition-colors"
+          >
+            {t("nav.dashboard")}
           </Link>
-          <Link to="/profile" className="text-sm font-medium hover:text-primary transition-colors">
-            {t('nav.profile')}
+          <Link
+            to="/profile"
+            className="text-sm font-medium hover:text-primary transition-colors"
+          >
+            {t("nav.profile")}
           </Link>
         </nav>
 
@@ -46,21 +61,23 @@ export const Header = () => {
         <div className="flex items-center gap-2 md:gap-4">
           {/* Language Toggle */}
           <button
-            onClick={() => setLanguage(language === 'en' ? 'bn' : 'en')}
+            onClick={() => setLanguage(language === "en" ? "bn" : "en")}
             className="flex items-center gap-1 px-3 py-2 text-sm rounded-lg hover:bg-accent transition-colors"
-            title={language === 'en' ? 'বাংলা' : 'English'}
+            title={language === "en" ? "বাংলা" : "English"}
           >
-            <span className="text-lg">{language === 'en' ? '🇧🇩' : '🇬🇧'}</span>
-            <span className="hidden sm:inline">{language === 'en' ? 'বাংলা' : 'EN'}</span>
+            <span className="text-lg">{language === "en" ? "🇧🇩" : "🇬🇧"}</span>
+            <span className="hidden sm:inline">
+              {language === "en" ? "বাংলা" : "EN"}
+            </span>
           </button>
 
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
             className="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-accent transition-colors"
-            title={t('common.theme')}
+            title={t("common.theme")}
           >
-            {theme === 'light' ? (
+            {theme === "light" ? (
               <Moon className="w-5 h-5" />
             ) : (
               <Sun className="w-5 h-5" />
@@ -90,35 +107,35 @@ export const Header = () => {
               className="px-4 py-2 text-sm font-medium hover:bg-accent rounded transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
-              {t('common.home')}
+              {t("common.home")}
             </Link>
             <Link
               to="/inventory"
               className="px-4 py-2 text-sm font-medium hover:bg-accent rounded transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
-              {t('nav.inventory')}
+              {t("nav.inventory")}
             </Link>
             <Link
               to="/resources"
               className="px-4 py-2 text-sm font-medium hover:bg-accent rounded transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
-              {t('nav.resources')}
+              {t("nav.resources")}
             </Link>
             <Link
               to="/dashboard"
               className="px-4 py-2 text-sm font-medium hover:bg-accent rounded transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
-              {t('nav.dashboard')}
+              {t("nav.dashboard")}
             </Link>
             <Link
               to="/profile"
               className="px-4 py-2 text-sm font-medium hover:bg-accent rounded transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
-              {t('nav.profile')}
+              {t("nav.profile")}
             </Link>
           </div>
         </nav>

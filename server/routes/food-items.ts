@@ -1,5 +1,5 @@
-import { RequestHandler } from 'express';
-import { foodItems } from '@shared/foodItems';
+import { RequestHandler } from "express";
+import { foodItems } from "@shared/foodItems";
 
 /**
  * Get all food items
@@ -11,27 +11,28 @@ import { foodItems } from '@shared/foodItems';
 export const handleGetFoodItems: RequestHandler = (req, res) => {
   try {
     const { category, search } = req.query;
-    
+
     let filtered = [...foodItems];
-    
+
     // Apply filters
     if (category) {
-      filtered = filtered.filter(item => item.category === category);
+      filtered = filtered.filter((item) => item.category === category);
     }
     if (search) {
       const searchLower = (search as string).toLowerCase();
-      filtered = filtered.filter(item =>
-        item.nameEn.toLowerCase().includes(searchLower) ||
-        item.nameBn.toLowerCase().includes(searchLower)
+      filtered = filtered.filter(
+        (item) =>
+          item.nameEn.toLowerCase().includes(searchLower) ||
+          item.nameBn.toLowerCase().includes(searchLower),
       );
     }
-    
+
     res.json({
       total: filtered.length,
       items: filtered,
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch food items' });
+    res.status(500).json({ error: "Failed to fetch food items" });
   }
 };
 
@@ -42,16 +43,16 @@ export const handleGetFoodItems: RequestHandler = (req, res) => {
 export const handleGetFoodItem: RequestHandler = (req, res) => {
   try {
     const { id } = req.params;
-    
+
     // TODO: Fetch from database
-    const item = foodItems.find(f => f.id === id);
-    
+    const item = foodItems.find((f) => f.id === id);
+
     if (!item) {
-      return res.status(404).json({ error: 'Food item not found' });
+      return res.status(404).json({ error: "Food item not found" });
     }
-    
+
     res.json({ item });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch food item' });
+    res.status(500).json({ error: "Failed to fetch food item" });
   }
 };

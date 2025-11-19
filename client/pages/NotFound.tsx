@@ -1,7 +1,7 @@
-import { Link, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
-import { Header } from '@/components/Header';
-import { ArrowRight } from 'lucide-react';
+import { Link, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { Header } from "@/components/Header";
+import { ArrowRight } from "lucide-react";
 
 const NotFound = () => {
   const location = useLocation();
@@ -25,7 +25,9 @@ const NotFound = () => {
 
           <div className="space-y-2">
             <h1 className="text-3xl font-bold">Page Not Found</h1>
-            <p className="text-muted-foreground">The page you're looking for doesn't exist or has been moved.</p>
+            <p className="text-muted-foreground">
+              The page you're looking for doesn't exist or has been moved.
+            </p>
           </div>
 
           <Link

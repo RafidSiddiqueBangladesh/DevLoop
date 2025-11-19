@@ -9,6 +9,7 @@ FoodSense is a comprehensive full-stack web application designed to connect urba
 ## Tech Stack
 
 ### Frontend
+
 - **React 18** with TypeScript
 - **Vite** - Fast build tool and dev server
 - **React Router 6** - SPA routing
@@ -18,11 +19,13 @@ FoodSense is a comprehensive full-stack web application designed to connect urba
 - **TanStack React Query** - Data fetching & caching
 
 ### Backend
+
 - **Node.js + Express.js** - API server
 - **TypeScript** - Type safety
 - **Integrated with Vite dev server** - Single port development
 
 ### Styling & Theme
+
 - **CSS-in-JS with Tailwind** - Dynamic themes
 - **Light/Dark theme support** - Theme context
 - **Bilingual support** - Bengali & English
@@ -38,23 +41,28 @@ FoodSense is a comprehensive full-stack web application designed to connect urba
 ## Installation & Setup
 
 ### 1. Clone the Repository
+
 ```bash
 git clone <repository-url>
 cd foodsense
 ```
 
 ### 2. Install Dependencies
+
 ```bash
 pnpm install
 ```
 
 ### 3. Environment Configuration
+
 Create a `.env` file in the project root:
+
 ```bash
 cp .env.example .env
 ```
 
 Configure environment variables:
+
 ```env
 # Server
 PORT=3000
@@ -69,6 +77,7 @@ JWT_SECRET=your_secret
 ```
 
 ### 4. Start Development Server
+
 ```bash
 pnpm dev
 ```
@@ -76,11 +85,13 @@ pnpm dev
 The app will be available at `http://localhost:8080` (dev server on single port)
 
 ### 5. Build for Production
+
 ```bash
 pnpm build
 ```
 
 ### 6. Run Production Build
+
 ```bash
 pnpm start
 ```
@@ -138,17 +149,20 @@ foodsense/
 ## Core Features Implemented (Part 1)
 
 ### ✅ Authentication & User Management
+
 - Secure user registration with form validation
 - Email and password authentication (structure ready)
 - User profile fields: name, email, household size, dietary preferences, location
 
 ### ✅ User Profile & Consumption Logging
+
 - Profile page structure (prepared for implementation)
 - Manual food logging interface
 - Inventory management with add/edit/delete
 - Expiration date tracking
 
 ### ✅ Food Items Database
+
 - **20+ bilingual food items** with:
   - Name in English & Bengali
   - Category classification
@@ -160,6 +174,7 @@ foodsense/
 Included items: Rice, Lentils, Potatoes, Onions, Tomatoes, Cabbage, Eggplant, Spinach, Fish, Eggs, Milk, Yogurt, Mango, Banana, Jackfruit, Papaya, Carrots, Cucumbers, Green Chili, Garlic
 
 ### ✅ Sustainability Resources Database
+
 - **20+ bilingual resources** with:
   - Title in English & Bengali
   - Description & full content (both languages)
@@ -168,6 +183,7 @@ Included items: Rice, Lentils, Potatoes, Onions, Tomatoes, Cabbage, Eggplant, Sp
   - Target audience: Household, Farmer
 
 Sample resources:
+
 - Mango/Banana Peel Composting
 - Seasonal Vegetable Storage
 - Budget-Friendly Recipes
@@ -176,6 +192,7 @@ Sample resources:
 - Zero Waste Kitchen Tips
 
 ### ✅ Basic Tracking & Recommendation System
+
 - Dashboard with:
   - Total inventory count
   - Items expiring soon (visual alerts)
@@ -188,6 +205,7 @@ Sample resources:
   - Bar charts for budget tracking
 
 ### ✅ User Dashboard Design
+
 - Welcome message with user name
 - Quick stats cards: inventory, expiring items, weekly spending, budget
 - Charts for consumption and budget
@@ -196,6 +214,7 @@ Sample resources:
 - Quick action buttons: Add Item, Log Food, Upload Receipt
 
 ### ✅ Navigation & UI/UX
+
 - Responsive header with:
   - Logo/branding
   - Navigation links
@@ -212,6 +231,7 @@ Sample resources:
   - Footer with links
 
 ### ✅ Bilingual Support (Bengali + English)
+
 - Full translation coverage:
   - Navigation labels
   - Form fields & validation messages
@@ -223,6 +243,7 @@ Sample resources:
 - Proper Bengali typography support
 
 ### ✅ Light/Dark Theme
+
 - Theme context for global state
 - CSS variables for dynamic theming
 - Two complete color schemes:
@@ -232,6 +253,7 @@ Sample resources:
 - Theme preference stored in localStorage
 
 ### ✅ Code Quality & Organization
+
 - TypeScript throughout
 - Modular component structure
 - Clear naming conventions
@@ -288,28 +310,31 @@ GET  /api/dashboard/stats   - Get detailed statistics
 ## Styling System
 
 ### Theme Colors
+
 Located in `tailwind.config.ts` and `client/global.css`:
 
 ```css
 /* Primary Green (Sustainability) */
---primary: 157 40% 38%;           /* #2D6A4F */
+--primary: 157 40% 38%; /* #2D6A4F */
 --primary-foreground: 0 0% 100%;
 
 /* Secondary Orange (CTA) */
---secondary: 39 100% 50%;         /* #F77F00 */
+--secondary: 39 100% 50%; /* #F77F00 */
 --secondary-foreground: 222.2 84% 4.9%;
 
 /* Dark Theme */
---background: 217 33% 17%;        /* #1A1A2E */
+--background: 217 33% 17%; /* #1A1A2E */
 --foreground: 210 40% 98%;
 ```
 
 ### Typography
+
 - **Primary Font:** Inter (400, 500, 600, 700, 800)
 - **Bengali Support:** Noto Sans Bengali, Hind Siliguri
 - **Tailwind for layout:** Responsive grid system
 
 ### Components
+
 - Radix UI for accessible components
 - Custom styling with Tailwind
 - Consistent spacing & sizing system
@@ -317,41 +342,50 @@ Located in `tailwind.config.ts` and `client/global.css`:
 ## Development Workflow
 
 ### Add a New Page
+
 1. Create component in `client/pages/MyPage.tsx`
 2. Add route in `client/App.tsx`:
+
 ```typescript
 import MyPage from "./pages/MyPage";
 <Route path="/my-page" element={<MyPage />} />
 ```
+
 3. Add navigation link in `Header.tsx`
 4. Add translation strings in `lib/translations.ts`
 
 ### Add a New API Endpoint
+
 1. Create handler in `server/routes/my-route.ts`:
+
 ```typescript
 import { RequestHandler } from "express";
 
 export const handleMyRoute: RequestHandler = (req, res) => {
-  res.json({ message: 'Hello from my endpoint!' });
+  res.json({ message: "Hello from my endpoint!" });
 };
 ```
+
 2. Register in `server/index.ts`:
+
 ```typescript
 import { handleMyRoute } from "./routes/my-route";
 app.get("/api/my-endpoint", handleMyRoute);
 ```
 
 ### Use Translations
+
 ```typescript
-import { useTranslation } from '@/lib/useTranslation';
+import { useTranslation } from "@/lib/useTranslation";
 
 const { t } = useTranslation();
 // Usage: t('nav.dashboard'), t('auth.email'), etc.
 ```
 
 ### Theme Usage
+
 ```typescript
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from "@/context/ThemeContext";
 
 const { theme, toggleTheme } = useTheme();
 ```
@@ -359,18 +393,21 @@ const { theme, toggleTheme } = useTheme();
 ## Deployment Options
 
 ### Netlify
+
 ```bash
 pnpm build
 # Use Netlify UI or CLI to deploy
 ```
 
 ### Vercel
+
 ```bash
 pnpm build
 # Deploy using Vercel CLI
 ```
 
 ### Self-Hosted (Railway, Render, DigitalOcean)
+
 ```bash
 pnpm build
 pnpm start
@@ -379,23 +416,27 @@ pnpm start
 ## Extended Features (Prepared Structure)
 
 ### IoT Integration (Part 2)
+
 - Database schema prepared for IoT devices
 - API endpoint structure for inventory updates
 - Smart Scale integration ready
 - Button Phone calling system structure
 
 ### AgriSense Integration (Part 2)
+
 - Farmer user type structure
 - Crop management interface ready
 - IoT sensor data schema
 - 7-8 day forecast display
 
 ### Waste-to-Compost Marketplace (Part 2)
+
 - Household waste logging interface
 - Farmer waste collection matching
 - Plastic collection incentive system
 
 ### Product Marketplace (Part 2)
+
 - Farmer product listing interface
 - Shopping cart functionality
 - Payment integration structure (bKash, Nagad, CoD)
@@ -403,6 +444,7 @@ pnpm start
 ## Future Enhancements
 
 ### Phase 2 Features
+
 - [ ] AI-powered recommendations engine
 - [ ] Real-time IoT device synchronization
 - [ ] Advanced analytics dashboard
@@ -415,6 +457,7 @@ pnpm start
 - [ ] Email & push notifications
 
 ### Technical Improvements
+
 - [ ] Database migration to PostgreSQL/MongoDB
 - [ ] Caching layer (Redis)
 - [ ] Real-time updates (WebSockets)
@@ -426,6 +469,7 @@ pnpm start
 ## Troubleshooting
 
 ### Dev Server Not Starting
+
 ```bash
 # Clear cache and reinstall
 pnpm install
@@ -433,6 +477,7 @@ pnpm dev
 ```
 
 ### Build Errors
+
 ```bash
 # Check TypeScript compilation
 pnpm typecheck
@@ -443,7 +488,9 @@ pnpm install
 ```
 
 ### Port Already in Use
+
 Change port in `vite.config.ts`:
+
 ```typescript
 server: {
   port: 3001,
@@ -454,6 +501,7 @@ server: {
 ## Testing
 
 Currently set up with **Vitest** for unit testing:
+
 ```bash
 # Run tests
 pnpm test
@@ -475,6 +523,7 @@ pnpm format.fix
 ## Environment Variables
 
 ### Available Variables
+
 ```env
 PORT=3000                    # Server port
 NODE_ENV=development         # Environment
@@ -527,6 +576,7 @@ This project is licensed under the MIT License - see LICENSE file for details.
 ## Support
 
 For issues, feature requests, or questions:
+
 - Open an issue on GitHub
 - Check existing documentation
 - Review AGENTS.md for architecture notes

@@ -2,10 +2,30 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
-import { handleRegister, handleLogin, handleGetProfile, handleUpdateProfile, handleLogout } from "./routes/auth";
-import { handleGetInventory, handleAddInventoryItem, handleUpdateInventoryItem, handleDeleteInventoryItem, handleGetExpiringItems } from "./routes/inventory";
-import { handleLogFood, handleGetFoodLogs, handleGetAnalytics } from "./routes/foodLogs";
-import { handleGetResources, handleGetResource, handleSearchResources } from "./routes/resources";
+import {
+  handleRegister,
+  handleLogin,
+  handleGetProfile,
+  handleUpdateProfile,
+  handleLogout,
+} from "./routes/auth";
+import {
+  handleGetInventory,
+  handleAddInventoryItem,
+  handleUpdateInventoryItem,
+  handleDeleteInventoryItem,
+  handleGetExpiringItems,
+} from "./routes/inventory";
+import {
+  handleLogFood,
+  handleGetFoodLogs,
+  handleGetAnalytics,
+} from "./routes/foodLogs";
+import {
+  handleGetResources,
+  handleGetResource,
+  handleSearchResources,
+} from "./routes/resources";
 import { handleGetFoodItems, handleGetFoodItem } from "./routes/food-items";
 import { authMiddleware } from "./middleware/auth";
 
@@ -100,12 +120,19 @@ export function createServer() {
   // POST /api/iot/inventory/update
 
   // Error handling middleware
-  app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-    console.error(err);
-    res.status(err.status || 500).json({
-      error: err.message || "Internal server error",
-    });
-  });
+  app.use(
+    (
+      err: any,
+      _req: express.Request,
+      res: express.Response,
+      _next: express.NextFunction,
+    ) => {
+      console.error(err);
+      res.status(err.status || 500).json({
+        error: err.message || "Internal server error",
+      });
+    },
+  );
 
   return app;
 }

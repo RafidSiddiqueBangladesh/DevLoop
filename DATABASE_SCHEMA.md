@@ -5,6 +5,7 @@ This document outlines the planned database schema for the FoodSense platform. C
 ## Overview
 
 The database will support:
+
 - **Household user management** with profiles and preferences
 - **Food inventory tracking** with expiration dates
 - **Consumption logging** for analytics
@@ -281,7 +282,7 @@ CREATE INDEX idx_orders_status ON orders(order_status);
 
 ```sql
 CREATE VIEW user_dashboard_summary AS
-SELECT 
+SELECT
   u.id as user_id,
   COUNT(DISTINCT i.id) as inventory_count,
   COUNT(DISTINCT CASE WHEN i.expiration_date <= CURRENT_DATE + INTERVAL '3 days' THEN i.id END) as items_expiring_soon,

@@ -1,4 +1,4 @@
-import { RequestHandler } from 'express';
+import { RequestHandler } from "express";
 
 /**
  * Log consumed food
@@ -10,16 +10,16 @@ import { RequestHandler } from 'express';
 export const handleLogFood: RequestHandler = (req, res) => {
   try {
     const { itemId, quantity, unit, date, cost } = req.body;
-    
+
     // TODO: Validate input
     // TODO: Record food consumption in database
     // TODO: Update inventory quantities
     // TODO: Track spending for budget
-    
+
     res.status(201).json({
-      message: 'Food consumption logged',
+      message: "Food consumption logged",
       log: {
-        id: 'log-id',
+        id: "log-id",
         itemId,
         quantity,
         unit,
@@ -28,7 +28,7 @@ export const handleLogFood: RequestHandler = (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to log food' });
+    res.status(500).json({ error: "Failed to log food" });
   }
 };
 
@@ -39,23 +39,23 @@ export const handleLogFood: RequestHandler = (req, res) => {
 export const handleGetFoodLogs: RequestHandler = (req, res) => {
   try {
     const { startDate, endDate } = req.query;
-    
+
     // TODO: Query database for logs within date range
-    
+
     res.json({
       logs: [
         {
-          id: '1',
-          itemName: 'Tomatoes',
+          id: "1",
+          itemName: "Tomatoes",
           quantity: 2,
-          unit: 'kg',
-          date: '2024-01-15',
+          unit: "kg",
+          date: "2024-01-15",
           cost: 80,
         },
       ],
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch food logs' });
+    res.status(500).json({ error: "Failed to fetch food logs" });
   }
 };
 
@@ -70,10 +70,10 @@ export const handleGetFoodLogs: RequestHandler = (req, res) => {
 export const handleGetAnalytics: RequestHandler = (req, res) => {
   try {
     const { period } = req.query; // week, month, year
-    
+
     // TODO: Calculate consumption patterns
     // TODO: Fetch from database
-    
+
     res.json({
       period,
       analytics: {
@@ -89,6 +89,6 @@ export const handleGetAnalytics: RequestHandler = (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch analytics' });
+    res.status(500).json({ error: "Failed to fetch analytics" });
   }
 };

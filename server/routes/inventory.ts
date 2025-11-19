@@ -1,4 +1,4 @@
-import { RequestHandler } from 'express';
+import { RequestHandler } from "express";
 
 /**
  * Get all inventory items for a user
@@ -11,25 +11,25 @@ export const handleGetInventory: RequestHandler = (req, res) => {
   try {
     // TODO: Get user ID from authenticated request
     // TODO: Query database for user's inventory items
-    
+
     res.json({
       items: [
         {
-          id: '1',
-          userId: 'user-1',
-          name: 'Tomatoes',
-          category: 'vegetables',
+          id: "1",
+          userId: "user-1",
+          name: "Tomatoes",
+          category: "vegetables",
           quantity: 2,
-          unit: 'kg',
-          expirationDate: '2024-01-22',
-          purchaseDate: '2024-01-15',
-          source: 'purchased',
-          status: 'expiring-soon',
+          unit: "kg",
+          expirationDate: "2024-01-22",
+          purchaseDate: "2024-01-15",
+          source: "purchased",
+          status: "expiring-soon",
         },
       ],
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch inventory' });
+    res.status(500).json({ error: "Failed to fetch inventory" });
   }
 };
 
@@ -42,15 +42,23 @@ export const handleGetInventory: RequestHandler = (req, res) => {
  */
 export const handleAddInventoryItem: RequestHandler = (req, res) => {
   try {
-    const { name, category, quantity, unit, expirationDate, purchaseDate, source } = req.body;
-    
+    const {
+      name,
+      category,
+      quantity,
+      unit,
+      expirationDate,
+      purchaseDate,
+      source,
+    } = req.body;
+
     // TODO: Validate input
     // TODO: Insert into database
-    
+
     res.status(201).json({
-      message: 'Item added to inventory',
+      message: "Item added to inventory",
       item: {
-        id: 'new-item-id',
+        id: "new-item-id",
         name,
         category,
         quantity,
@@ -61,7 +69,7 @@ export const handleAddInventoryItem: RequestHandler = (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to add item' });
+    res.status(500).json({ error: "Failed to add item" });
   }
 };
 
@@ -73,16 +81,16 @@ export const handleUpdateInventoryItem: RequestHandler = (req, res) => {
   try {
     const { id } = req.params;
     const { quantity, expirationDate } = req.body;
-    
+
     // TODO: Validate input
     // TODO: Update database record
-    
+
     res.json({
-      message: 'Item updated successfully',
+      message: "Item updated successfully",
       item: { id, quantity, expirationDate },
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to update item' });
+    res.status(500).json({ error: "Failed to update item" });
   }
 };
 
@@ -93,12 +101,12 @@ export const handleUpdateInventoryItem: RequestHandler = (req, res) => {
 export const handleDeleteInventoryItem: RequestHandler = (req, res) => {
   try {
     const { id } = req.params;
-    
+
     // TODO: Delete from database
-    
-    res.json({ message: 'Item deleted successfully', itemId: id });
+
+    res.json({ message: "Item deleted successfully", itemId: id });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to delete item' });
+    res.status(500).json({ error: "Failed to delete item" });
   }
 };
 
@@ -109,18 +117,18 @@ export const handleDeleteInventoryItem: RequestHandler = (req, res) => {
 export const handleGetExpiringItems: RequestHandler = (req, res) => {
   try {
     // TODO: Query database for items expiring within 3 days
-    
+
     res.json({
       items: [
         {
-          id: '1',
-          name: 'Tomatoes',
-          expirationDate: '2024-01-22',
+          id: "1",
+          name: "Tomatoes",
+          expirationDate: "2024-01-22",
           daysUntilExpiry: 2,
         },
       ],
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch expiring items' });
+    res.status(500).json({ error: "Failed to fetch expiring items" });
   }
 };

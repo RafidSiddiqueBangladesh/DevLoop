@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
 
 /**
  * Authentication middleware
@@ -13,7 +13,11 @@ export interface AuthenticatedRequest extends Request {
   };
 }
 
-export const authMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const authMiddleware = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     // TODO: Verify JWT token from request headers
     // const token = req.headers.authorization?.replace('Bearer ', '');
@@ -22,15 +26,19 @@ export const authMiddleware = (req: AuthenticatedRequest, res: Response, next: N
     // }
     // const decoded = jwt.verify(token, process.env.JWT_SECRET!);
     // req.user = decoded as any;
-    
+
     // For now, continue without authentication
     next();
   } catch (error) {
-    res.status(401).json({ error: 'Unauthorized' });
+    res.status(401).json({ error: "Unauthorized" });
   }
 };
 
-export const optionalAuth = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const optionalAuth = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     // Optional authentication - doesn't require token
     // TODO: Implement optional JWT verification

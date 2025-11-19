@@ -1,4 +1,4 @@
-import { RequestHandler } from 'express';
+import { RequestHandler } from "express";
 
 /**
  * User Registration
@@ -10,15 +10,22 @@ import { RequestHandler } from 'express';
  */
 export const handleRegister: RequestHandler = (req, res) => {
   try {
-    const { email, password, fullName, householdSize, dietaryPreferences, location } = req.body;
-    
+    const {
+      email,
+      password,
+      fullName,
+      householdSize,
+      dietaryPreferences,
+      location,
+    } = req.body;
+
     // TODO: Validate input
     // TODO: Hash password
     // TODO: Create user in database
     // TODO: Generate JWT token
-    
+
     res.status(201).json({
-      message: 'Registration successful',
+      message: "Registration successful",
       user: {
         email,
         fullName,
@@ -29,7 +36,7 @@ export const handleRegister: RequestHandler = (req, res) => {
       // token: generatedToken,
     });
   } catch (error) {
-    res.status(500).json({ error: 'Registration failed' });
+    res.status(500).json({ error: "Registration failed" });
   }
 };
 
@@ -43,23 +50,23 @@ export const handleRegister: RequestHandler = (req, res) => {
 export const handleLogin: RequestHandler = (req, res) => {
   try {
     const { email, password } = req.body;
-    
+
     // TODO: Validate input
     // TODO: Find user in database
     // TODO: Verify password
     // TODO: Generate JWT token
-    
+
     res.json({
-      message: 'Login successful',
+      message: "Login successful",
       user: {
-        id: 'user-id-1',
+        id: "user-id-1",
         email,
-        name: 'User Name',
+        name: "User Name",
       },
       // token: generatedToken,
     });
   } catch (error) {
-    res.status(401).json({ error: 'Invalid credentials' });
+    res.status(401).json({ error: "Invalid credentials" });
   }
 };
 
@@ -71,21 +78,21 @@ export const handleGetProfile: RequestHandler = (req, res) => {
   try {
     // TODO: Get user from authenticated request
     // TODO: Fetch user profile from database
-    
+
     res.json({
       user: {
-        id: 'user-id-1',
-        email: 'user@example.com',
-        fullName: 'John Doe',
+        id: "user-id-1",
+        email: "user@example.com",
+        fullName: "John Doe",
         householdSize: 4,
-        dietaryPreferences: 'Vegetarian',
-        location: 'Dhaka',
+        dietaryPreferences: "Vegetarian",
+        location: "Dhaka",
         monthlyBudget: 10000,
-        language: 'en',
+        language: "en",
       },
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch profile' });
+    res.status(500).json({ error: "Failed to fetch profile" });
   }
 };
 
@@ -95,13 +102,19 @@ export const handleGetProfile: RequestHandler = (req, res) => {
  */
 export const handleUpdateProfile: RequestHandler = (req, res) => {
   try {
-    const { fullName, householdSize, dietaryPreferences, location, monthlyBudget } = req.body;
-    
+    const {
+      fullName,
+      householdSize,
+      dietaryPreferences,
+      location,
+      monthlyBudget,
+    } = req.body;
+
     // TODO: Validate input
     // TODO: Update user in database
-    
+
     res.json({
-      message: 'Profile updated successfully',
+      message: "Profile updated successfully",
       user: {
         fullName,
         householdSize,
@@ -111,7 +124,7 @@ export const handleUpdateProfile: RequestHandler = (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to update profile' });
+    res.status(500).json({ error: "Failed to update profile" });
   }
 };
 
@@ -123,9 +136,9 @@ export const handleLogout: RequestHandler = (req, res) => {
   try {
     // TODO: Implement token blacklisting if needed
     // Otherwise, logout happens client-side
-    
-    res.json({ message: 'Logout successful' });
+
+    res.json({ message: "Logout successful" });
   } catch (error) {
-    res.status(500).json({ error: 'Logout failed' });
+    res.status(500).json({ error: "Logout failed" });
   }
 };
