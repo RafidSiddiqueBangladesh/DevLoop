@@ -1,6 +1,5 @@
 [build]
-  base = "foodwaste"
-  command = "npm run build:client"
+  command = "pnpm install --no-frozen-lockfile && npm run build:client"
   publish = "dist/spa"
   functions = "netlify/functions"
 
@@ -9,7 +8,7 @@
   NODE_VERSION = "22.21.1"
 
 [[redirects]]
-  force = true
   from = "/api/*"
-  status = 200
   to = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true
