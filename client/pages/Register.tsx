@@ -3,9 +3,13 @@ import { Link } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { useTranslation } from "@/lib/useTranslation";
 import { Leaf } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const { t } = useTranslation();
+  const { register } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -56,12 +60,18 @@ export default function Register() {
 
     setIsLoading(true);
     try {
-      // TODO: Implement actual registration API call
-      console.log("Registering user:", formData);
-      // For now, just show success message
-      alert("Registration successful! Please log in.");
+      await register({
+        fullName: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+        householdSize: formData.householdSize,
+        dietaryPreferences: formData.dietaryPreferences,
+        location: formData.location,
+      });
+      navigate("/dashboard");
     } catch (error) {
       console.error("Registration error:", error);
+      setErrors({ password: (error as Error).message || "Registration failed" });
     } finally {
       setIsLoading(false);
     }
@@ -237,7 +247,7 @@ export default function Register() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-2 bg-gradient-to-r from-primary to-brand-green-light text-white font-semibold rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-2 bg-primary text-primary-foreground font-semibold rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90"
               >
                 {isLoading ? t("common.loading") : t("auth.submitRegister")}
               </button>

@@ -55,7 +55,7 @@ export default function Dashboard() {
                 <p className="text-sm text-muted-foreground mb-1">
                   {t("dashboard.inventory")}
                 </p>
-                <p className="text-3xl font-bold">12</p>
+                <p className="text-3xl font-bold text-card-foreground">12</p>
               </div>
               <Package className="w-12 h-12 text-primary/20" />
             </div>
@@ -67,7 +67,7 @@ export default function Dashboard() {
                 <p className="text-sm text-muted-foreground mb-1">
                   {t("dashboard.expiringItems")}
                 </p>
-                <p className="text-3xl font-bold">2</p>
+                <p className="text-3xl font-bold text-card-foreground">2</p>
               </div>
               <AlertCircle className="w-12 h-12 text-destructive/20" />
             </div>
@@ -79,7 +79,7 @@ export default function Dashboard() {
                 <p className="text-sm text-muted-foreground mb-1">
                   {t("dashboard.weeklySpending")}
                 </p>
-                <p className="text-3xl font-bold">2,600 ৳</p>
+                <p className="text-3xl font-bold text-card-foreground">2,600 ৳</p>
               </div>
               <ShoppingCart className="w-12 h-12 text-secondary/20" />
             </div>
@@ -91,7 +91,7 @@ export default function Dashboard() {
                 <p className="text-sm text-muted-foreground mb-1">
                   {t("dashboard.budget")}
                 </p>
-                <p className="text-3xl font-bold">3,000 ৳</p>
+                <p className="text-3xl font-bold text-card-foreground">3,000 ৳</p>
               </div>
               <TrendingUp className="w-12 h-12 text-primary/20" />
             </div>
@@ -106,10 +106,18 @@ export default function Dashboard() {
             </h2>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={consumptionData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                <XAxis stroke="var(--muted-foreground)" />
-                <YAxis stroke="var(--muted-foreground)" />
-                <Tooltip />
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                <XAxis stroke="hsl(var(--muted-foreground))" tick={{ fill: "hsl(var(--muted-foreground))" }} />
+                <YAxis stroke="hsl(var(--muted-foreground))" tick={{ fill: "hsl(var(--muted-foreground))" }} />
+                <Tooltip
+                  contentStyle={{
+                    background: "hsl(var(--card))",
+                    border: "1px solid hsl(var(--border))",
+                    color: "hsl(var(--card-foreground))",
+                  }}
+                  labelStyle={{ color: "hsl(var(--card-foreground))" }}
+                  itemStyle={{ color: "hsl(var(--card-foreground))" }}
+                />
                 <Line
                   type="monotone"
                   dataKey="vegetables"
@@ -120,7 +128,7 @@ export default function Dashboard() {
                   dataKey="fruits"
                   stroke="hsl(var(--secondary))"
                 />
-                <Line type="monotone" dataKey="dairy" stroke="#f59e0b" />
+                <Line type="monotone" dataKey="dairy" stroke="hsl(var(--foreground))" />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -129,10 +137,18 @@ export default function Dashboard() {
             <h2 className="text-xl font-bold mb-6">Budget Tracking</h2>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={budgetData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                <XAxis stroke="var(--muted-foreground)" />
-                <YAxis stroke="var(--muted-foreground)" />
-                <Tooltip />
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                <XAxis stroke="hsl(var(--muted-foreground))" tick={{ fill: "hsl(var(--muted-foreground))" }} />
+                <YAxis stroke="hsl(var(--muted-foreground))" tick={{ fill: "hsl(var(--muted-foreground))" }} />
+                <Tooltip
+                  contentStyle={{
+                    background: "hsl(var(--card))",
+                    border: "1px solid hsl(var(--border))",
+                    color: "hsl(var(--card-foreground))",
+                  }}
+                  labelStyle={{ color: "hsl(var(--card-foreground))" }}
+                  itemStyle={{ color: "hsl(var(--card-foreground))" }}
+                />
                 <Bar
                   dataKey="budget"
                   fill="hsl(var(--primary))"

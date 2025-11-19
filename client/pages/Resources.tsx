@@ -1,6 +1,7 @@
 import { Header } from "@/components/Header";
+import Footer from "@/components/Footer";
 import { useTranslation } from "@/lib/useTranslation";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Search, FileText, Video, PieChart, ArrowRight } from "lucide-react";
 
 export default function Resources() {
@@ -8,6 +9,9 @@ export default function Resources() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState("all");
   const [filterType, setFilterType] = useState("all");
+  const [ytLoading, setYtLoading] = useState(false);
+  const [ytError, setYtError] = useState<string | null>(null);
+  const [ytVideos, setYtVideos] = useState<Array<any>>([]);
 
   // Sample resources data
   const resources = [
@@ -73,6 +77,48 @@ export default function Resources() {
     const matchesType = filterType === "all" || resource.type === filterType;
     return matchesSearch && matchesCategory && matchesType;
   });
+
+  // Debounced search term for YouTube queries
+  const debouncedSearch = useMemo(() => searchQuery.trim(), [searchQuery]);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function run() {
+      // Only fetch YouTube videos if type filter includes videos or when user searches
+      if (filterType !== "all" && filterType !== "video") return;
+      if (!debouncedSearch) {
+        // default search for sustainable food topics
+        setYtLoading(true);
+        setYtError(null);
+        try {
+          const resp = await fetch(`/api/youtube/search?q=sustainable food waste management&maxResults=8`);
+          const data = await resp.json();
+          if (!cancelled) setYtVideos(data.videos || []);
+        } catch (e: any) {
+          if (!cancelled) setYtError("Failed to load videos");
+        } finally {
+          if (!cancelled) setYtLoading(false);
+        }
+        return;
+      }
+
+      setYtLoading(true);
+      setYtError(null);
+      try {
+        const resp = await fetch(`/api/youtube/search?q=${encodeURIComponent(debouncedSearch)}&maxResults=8`);
+        const data = await resp.json();
+        if (!cancelled) setYtVideos(data.videos || []);
+      } catch (e: any) {
+        if (!cancelled) setYtError("Failed to load videos");
+      } finally {
+        if (!cancelled) setYtLoading(false);
+      }
+    }
+    run();
+    return () => {
+      cancelled = true;
+    };
+  }, [debouncedSearch, filterType]);
 
   const getTypeIcon = (type: string) => {
     switch (type) {
@@ -187,6 +233,69 @@ export default function Resources() {
           </div>
         )}
       </div>
+
+      {/* YouTube Videos Section */}
+      <div className="mt-12">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <YoutubeIcon />
+            {t("resources.youtubeTitle", { defaultValue: "YouTube Videos" })}
+          </h2>
+          <span className="text-sm text-muted-foreground">
+            {ytLoading ? "Loading…" : ytError ? ytError : `${ytVideos.length} videos`}
+          </span>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {ytVideos.map((v) => (
+            <a
+              key={v.id}
+              href={`https://www.youtube.com/watch?v=${v.id}`}
+              target="_blank"
+              rel="noreferrer"
+              className="group rounded-lg border border-border overflow-hidden hover:border-primary/50 hover:shadow-lg transition-all"
+            >
+              <div className="aspect-video bg-muted">
+                {v.thumbnails?.medium?.url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={v.thumbnails.medium.url}
+                    alt={v.title}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                    No thumbnail
+                  </div>
+                )}
+              </div>
+              <div className="p-3">
+                <div className="text-sm font-semibold line-clamp-2 group-hover:text-primary">
+                  {v.title}
+                </div>
+                <div className="text-xs text-muted-foreground mt-1 line-clamp-1">
+                  {v.channelTitle} • {new Date(v.publishedAt).toLocaleDateString()}
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+      <Footer />
     </div>
   );
 }
+
+const YoutubeIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className="text-primary"
+  >
+    <path d="M23.498 6.186a2.999 2.999 0 0 0-2.118-2.118C19.622 3.5 12 3.5 12 3.5s-7.622 0-9.38.568A2.999 2.999 0 0 0 .502 6.186C-.066 7.944-.066 12-.066 12s0 4.056.568 5.814a2.999 2.999 0 0 0 2.118 2.118C4.378 20.5 12 20.5 12 20.5s7.622 0 9.38-.568a2.999 2.999 0 0 0 2.118-2.118C24.066 16.056 24.066 12 24.066 12s0-4.056-.568-5.814ZM9.75 15.5v-7l6 3.5-6 3.5Z" />
+  </svg>
+);

@@ -2,6 +2,8 @@ import { Header } from "@/components/Header";
 import { useTranslation } from "@/lib/useTranslation";
 import { useState } from "react";
 import { Upload, X, Check } from "lucide-react";
+import { apiUpload } from "@/lib/api";
+import { useAuth } from "@/context/AuthContext";
 
 interface UploadedImage {
   id: string;
@@ -14,6 +16,7 @@ interface UploadedImage {
 
 export default function ImageUpload() {
   const { t } = useTranslation();
+  const { token } = useAuth();
   const [uploadType, setUploadType] = useState<
     "receipt" | "label" | "food-photo"
   >("receipt");
@@ -73,23 +76,28 @@ export default function ImageUpload() {
     }
   };
 
-  const handleFiles = (files: FileList) => {
+  const handleFiles = async (files: FileList) => {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      if (file.type.startsWith("image/") || file.type === "application/pdf") {
-        const reader = new FileReader();
-        reader.onload = () => {
+      if (!token) continue;
+      if (file.type.startsWith("image/")) {
+        const form = new FormData();
+        form.append("file", file);
+        try {
+          const endpoint = uploadType === "food-photo" ? "/api/upload/food-photo" : "/api/upload/receipt";
+          const res = await apiUpload<{ id: string; filename: string; originalName: string; type: string; url?: string }>(endpoint, form, token);
           const newImage: UploadedImage = {
-            id: Date.now().toString(),
-            name: file.name,
-            url: reader.result as string,
-            type: uploadType,
+            id: res.id,
+            name: res.originalName,
+            url: res.url || "",
+            type: (res.type as any) || uploadType,
             uploadDate: new Date().toISOString().split("T")[0],
             size: Math.round(file.size / 1024),
           };
           setUploadedImages([newImage, ...uploadedImages]);
-        };
-        reader.readAsDataURL(file);
+        } catch (err) {
+          console.error("Upload failed", err);
+        }
       }
     }
   };

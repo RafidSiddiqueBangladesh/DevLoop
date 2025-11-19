@@ -8,7 +8,7 @@ import {
   handleGetProfile,
   handleUpdateProfile,
   handleLogout,
-} from "./routes/auth";
+} from "./routes/auth-secure";
 import {
   handleGetInventory,
   handleAddInventoryItem,
@@ -28,6 +28,8 @@ import {
 } from "./routes/resources";
 import { handleGetFoodItems, handleGetFoodItem } from "./routes/food-items";
 import { authMiddleware } from "./middleware/auth";
+import { handleYouTubeSearch } from "./routes/youtube";
+import { uploadReceiptMiddleware, uploadFoodPhotoMiddleware } from "./routes/uploads";
 
 export function createServer() {
   const app = express();
@@ -93,6 +95,17 @@ export function createServer() {
   app.get("/api/resources", handleGetResources);
   app.get("/api/resources/:id", handleGetResource);
   app.get("/api/resources/search", handleSearchResources);
+
+  // ============================================
+  // Image Upload Routes (Protected)
+  // ============================================
+  app.post("/api/upload/receipt", authMiddleware, ...uploadReceiptMiddleware);
+  app.post("/api/upload/food-photo", authMiddleware, ...uploadFoodPhotoMiddleware);
+
+  // ============================================
+  // YouTube Search (Public)
+  // ============================================
+  app.get("/api/youtube/search", handleYouTubeSearch);
 
   // ============================================
   // Image Upload Routes (Prepared for Future)

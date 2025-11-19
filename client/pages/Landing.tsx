@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "@/lib/useTranslation";
 import { Header } from "@/components/Header";
+import Footer from "@/components/Footer";
+import { useTheme } from "@/context/ThemeContext";
 import {
   ArrowRight,
   Leaf,
@@ -15,6 +17,7 @@ import { useState } from "react";
 export default function Landing() {
   const { t } = useTranslation();
   const [email, setEmail] = useState("");
+  const { theme } = useTheme();
 
   const features = [
     {
@@ -91,13 +94,15 @@ export default function Landing() {
     },
   ];
 
+  const panelClass = theme === "light" ? "panel-light-elegant" : "panel-white-violet";
+
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
+    <div className={`${panelClass} flex flex-col min-h-screen bg-background text-foreground`}>
       <Header />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5" />
+        <div className="absolute inset-0" style={{ background: "var(--gradient-hero)" }} />
         <div className="relative container mx-auto px-4 py-20 md:py-32 max-w-6xl">
           <div className="text-center space-y-8">
             <div className="inline-block px-4 py-2 rounded-full bg-primary/10 border border-primary/20">
@@ -107,7 +112,7 @@ export default function Landing() {
             </div>
 
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
-              <span className="bg-gradient-to-r from-primary via-brand-green-light to-primary bg-clip-text text-transparent">
+              <span className="text-foreground">
                 {t("landing.headline")}
               </span>
             </h1>
@@ -119,7 +124,7 @@ export default function Landing() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
               <Link
                 to="/register"
-                className="px-8 py-4 bg-gradient-to-r from-primary to-brand-green-light text-white font-semibold rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
+                className="px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
               >
                 {t("landing.ctaPrimary")}
                 <ArrowRight className="w-5 h-5" />
@@ -130,12 +135,12 @@ export default function Landing() {
             </div>
 
             {/* Hero Image/Illustration */}
-            <div className="mt-12 relative h-96 md:h-96 rounded-2xl overflow-hidden bg-gradient-to-br from-primary/10 to-secondary/10 border border-border flex items-center justify-center">
+            <div className="mt-12 relative h-96 md:h-96 rounded-2xl overflow-hidden bg-card border border-border flex items-center justify-center" style={{ boxShadow: "var(--shadow-elegant)" }}>
               <div className="text-center space-y-4">
                 <div className="flex gap-8 justify-center items-end">
-                  <div className="h-24 w-16 bg-gradient-to-t from-primary/30 to-primary/10 rounded-t-lg" />
-                  <div className="h-32 w-16 bg-gradient-to-t from-primary/40 to-primary/15 rounded-t-lg" />
-                  <div className="h-20 w-16 bg-gradient-to-t from-primary/25 to-primary/5 rounded-t-lg" />
+                  <div className="h-24 w-16 bg-gradient-to-t from-primary/40 to-primary/10 rounded-t-lg" />
+                  <div className="h-32 w-16 bg-gradient-to-t from-primary/50 to-primary/15 rounded-t-lg" />
+                  <div className="h-20 w-16 bg-gradient-to-t from-primary/30 to-primary/10 rounded-t-lg" />
                 </div>
                 <p className="text-sm text-muted-foreground">
                   Smart Food Management Analytics
@@ -147,7 +152,7 @@ export default function Landing() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 md:py-32 border-t border-border">
+      <section className="py-20 md:py-32 border-t border-border bg-background">
         <div className="container mx-auto px-4 max-w-6xl space-y-16">
           <div className="text-center space-y-4">
             <h2 className="text-3xl md:text-5xl font-bold">
@@ -162,16 +167,19 @@ export default function Landing() {
             {features.map((feature, idx) => {
               const Icon = feature.icon;
               return (
-                <div
+                <Link
+                  to={`/features/${idx}`}
+                  aria-label={`View ${feature.title}`}
                   key={idx}
-                  className="group p-8 rounded-xl bg-card border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                  className="group p-8 rounded-xl border border-border hover:border-primary/60 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                  style={{ background: "var(--gradient-card)", boxShadow: "var(--shadow-card)" }}
                 >
-                  <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-6 group-hover:from-primary/30 group-hover:to-secondary/30 transition-colors">
+                  <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center mb-6 group-hover:from-primary/30 group-hover:to-primary/20 transition-colors">
                     <Icon className="w-7 h-7 text-primary" />
                   </div>
                   <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
                   <p className="text-muted-foreground">{feature.desc}</p>
-                </div>
+                </Link>
               );
             })}
           </div>
@@ -179,7 +187,7 @@ export default function Landing() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 md:py-32 bg-card/50 border-t border-border">
+      <section className="py-20 md:py-32 bg-background border-t border-border">
         <div className="container mx-auto px-4 max-w-6xl space-y-16">
           <div className="text-center space-y-4">
             <h2 className="text-3xl md:text-5xl font-bold">
@@ -190,16 +198,13 @@ export default function Landing() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="relative overflow-hidden grid md:grid-cols-3 gap-8">
             {steps.map((step, idx) => (
-              <div key={idx} className="relative">
-                {/* Connecting line */}
-                {idx < steps.length - 1 && (
-                  <div className="hidden md:block absolute top-20 left-[calc(50%+3rem)] right-[-3rem] h-1 bg-gradient-to-r from-primary to-transparent" />
-                )}
+              <Link key={idx} to={`/how-it-works/${idx}`} className="relative group">
+                
 
                 <div className="space-y-4">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-brand-green-light flex items-center justify-center text-white font-bold text-2xl">
+                  <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-2xl">
                     {step.number}
                   </div>
                   <div>
@@ -207,7 +212,7 @@ export default function Landing() {
                     <p className="text-muted-foreground">{step.desc}</p>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -300,7 +305,7 @@ export default function Landing() {
               onChange={(e) => setEmail(e.target.value)}
               className="flex-1 px-4 py-3 rounded-lg bg-input border border-border focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
-            <button className="px-6 py-3 bg-gradient-to-r from-primary to-brand-green-light text-white font-semibold rounded-lg hover:shadow-lg transition-all hover:scale-105">
+            <button className="px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:shadow-lg transition-all hover:scale-105 hover:opacity-90">
               {t("landing.subscribe")}
             </button>
           </div>
@@ -308,72 +313,7 @@ export default function Landing() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border bg-card/50 py-12">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <h3 className="font-bold mb-4">FoodSense</h3>
-              <p className="text-sm text-muted-foreground">
-                Smart food management for sustainable living
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Product</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>
-                  <Link
-                    to="/inventory"
-                    className="hover:text-primary transition-colors"
-                  >
-                    {t("nav.inventory")}
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/resources"
-                    className="hover:text-primary transition-colors"
-                  >
-                    {t("nav.resources")}
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>
-                  <a href="#" className="hover:text-primary transition-colors">
-                    About
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-primary transition-colors">
-                    Contact
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Follow</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>
-                  <a href="#" className="hover:text-primary transition-colors">
-                    Twitter
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-primary transition-colors">
-                    GitHub
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-border pt-8 text-center text-sm text-muted-foreground">
-            <p>{t("landing.copyright")}</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

@@ -1,91 +1,90 @@
 import { RequestHandler } from "express";
+import { readCollection, writeCollection } from "../storage/db";
 
-/**
- * Log consumed food
- * TODO: Implement with:
- * - Food consumption tracking
- * - Analytics calculation
- * - Budget tracking
- */
+interface FoodLog {
+  id: string;
+  userId: string;
+  itemName: string;
+  category: string;
+  quantity: number;
+  unit?: string;
+  date: string; // ISO date
+  cost?: number; // BDT
+}
+
 export const handleLogFood: RequestHandler = (req, res) => {
   try {
-    const { itemId, quantity, unit, date, cost } = req.body;
+    // @ts-expect-error user attached by middleware
+    const userId: string | undefined = req.user?.id;
+    if (!userId) return res.status(401).json({ error: "Unauthorized" });
 
-    // TODO: Validate input
-    // TODO: Record food consumption in database
-    // TODO: Update inventory quantities
-    // TODO: Track spending for budget
-
-    res.status(201).json({
-      message: "Food consumption logged",
-      log: {
-        id: "log-id",
-        itemId,
-        quantity,
-        unit,
-        date,
-        cost,
-      },
-    });
+    const { itemName, category, quantity, unit, date, cost } = req.body || {};
+    if (!itemName || !category || !quantity) {
+      return res.status(400).json({ error: "itemName, category, quantity are required" });
+    }
+    const id = (globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`).toString();
+    const log: FoodLog = {
+      id,
+      userId,
+      itemName,
+      category,
+      quantity: Number(quantity),
+      unit,
+      date: date || new Date().toISOString(),
+      cost: cost != null ? Number(cost) : undefined,
+    };
+    const logs = readCollection<FoodLog[]>("logs");
+    logs.push(log);
+    writeCollection("logs", logs);
+    res.status(201).json({ message: "Food consumption logged", log });
   } catch (error) {
     res.status(500).json({ error: "Failed to log food" });
   }
 };
 
-/**
- * Get food consumption logs
- * TODO: Implement with filtering by date range
- */
 export const handleGetFoodLogs: RequestHandler = (req, res) => {
   try {
+    // @ts-expect-error user attached by middleware
+    const userId: string | undefined = req.user?.id;
+    if (!userId) return res.status(401).json({ error: "Unauthorized" });
     const { startDate, endDate } = req.query;
-
-    // TODO: Query database for logs within date range
-
-    res.json({
-      logs: [
-        {
-          id: "1",
-          itemName: "Tomatoes",
-          quantity: 2,
-          unit: "kg",
-          date: "2024-01-15",
-          cost: 80,
-        },
-      ],
+    const s = startDate ? new Date(startDate as string) : null;
+    const e = endDate ? new Date(endDate as string) : null;
+    const all = readCollection<FoodLog[]>("logs");
+    const logs = all.filter((l) => {
+      if (l.userId !== userId) return false;
+      const d = new Date(l.date);
+      if (s && d < s) return false;
+      if (e && d > e) return false;
+      return true;
     });
+    res.json({ logs });
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch food logs" });
   }
 };
 
-/**
- * Get consumption analytics
- * TODO: Implement with:
- * - Category-wise consumption
- * - Weekly/monthly trends
- * - Waste calculation
- * - Budget vs actual spending
- */
 export const handleGetAnalytics: RequestHandler = (req, res) => {
   try {
+    // @ts-expect-error user attached by middleware
+    const userId: string | undefined = req.user?.id;
+    if (!userId) return res.status(401).json({ error: "Unauthorized" });
     const { period } = req.query; // week, month, year
-
-    // TODO: Calculate consumption patterns
-    // TODO: Fetch from database
-
+    const all = readCollection<FoodLog[]>("logs");
+    const userLogs = all.filter((l) => l.userId === userId);
+    const totalConsumed = userLogs.reduce((sum, l) => sum + (Number(l.quantity) || 0), 0);
+    const byCategory: Record<string, number> = {};
+    let weeklySpending = 0;
+    for (const l of userLogs) {
+      byCategory[l.category] = (byCategory[l.category] || 0) + (Number(l.quantity) || 0);
+      weeklySpending += l.cost || 0;
+    }
     res.json({
       period,
       analytics: {
-        totalConsumed: 15,
-        byCategory: {
-          vegetables: 8,
-          fruits: 4,
-          dairy: 3,
-        },
-        weeklySpending: 2600,
-        monthlyBudget: 10000,
-        wastePercentage: 15,
+        totalConsumed,
+        byCategory,
+        weeklySpending,
       },
     });
   } catch (error) {

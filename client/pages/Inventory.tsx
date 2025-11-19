@@ -1,67 +1,47 @@
 import { Header } from "@/components/Header";
 import { useTranslation } from "@/lib/useTranslation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, Plus, Edit2, Trash2 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { apiFetch } from "@/lib/api";
 
 export default function Inventory() {
   const { t } = useTranslation();
+  const { token } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
+  const [items, setItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  // Sample inventory data
-  const items = [
-    {
-      id: 1,
-      name: "Tomatoes",
-      category: "vegetables",
-      quantity: 2,
-      unit: "kg",
-      expiryDays: 2,
-      purchaseDate: "2024-01-15",
-      status: "expiring-soon",
-    },
-    {
-      id: 2,
-      name: "Milk",
-      category: "dairy",
-      quantity: 1,
-      unit: "L",
-      expiryDays: 3,
-      purchaseDate: "2024-01-18",
-      status: "expiring-soon",
-    },
-    {
-      id: 3,
-      name: "Rice",
-      category: "grains",
-      quantity: 5,
-      unit: "kg",
-      expiryDays: 180,
-      purchaseDate: "2024-01-10",
-      status: "fresh",
-    },
-    {
-      id: 4,
-      name: "Onions",
-      category: "vegetables",
-      quantity: 3,
-      unit: "kg",
-      expiryDays: 30,
-      purchaseDate: "2024-01-15",
-      status: "fresh",
-    },
-    {
-      id: 5,
-      name: "Eggs",
-      category: "eggs",
-      quantity: 12,
-      unit: "pieces",
-      expiryDays: 7,
-      purchaseDate: "2024-01-16",
-      status: "fresh",
-    },
-  ];
+  // Compute status from expirationDate
+  const computeStatus = (expirationDate?: string) => {
+    if (!expirationDate) return "fresh";
+    const now = new Date();
+    const target = new Date(expirationDate);
+    const diffDays = Math.ceil((target.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+    if (diffDays <= 0) return "expired";
+    if (diffDays <= 3) return "expiring-soon";
+    return "fresh";
+  };
+
+  useEffect(() => {
+    const load = async () => {
+      if (!token) return;
+      setLoading(true);
+      try {
+        const res = await apiFetch<{ items: any[] }>("/api/inventory", { method: "GET" }, token);
+        const data = Array.isArray((res as any).items) ? (res as any).items : [];
+        setItems(data);
+      } catch (err) {
+        console.error("Failed to load inventory:", err);
+        setItems([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, [token]);
 
   const filteredItems = items.filter((item) => {
     const matchesSearch = item.name
@@ -69,8 +49,8 @@ export default function Inventory() {
       .includes(searchQuery.toLowerCase());
     const matchesCategory =
       filterCategory === "all" || item.category === filterCategory;
-    const matchesStatus =
-      filterStatus === "all" || item.status === filterStatus;
+    const status = computeStatus(item.expirationDate);
+    const matchesStatus = filterStatus === "all" || status === filterStatus;
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
@@ -98,7 +78,7 @@ export default function Inventory() {
               Manage your household food inventory
             </p>
           </div>
-          <button className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-brand-green-light text-white font-semibold rounded-lg hover:shadow-lg transition-all">
+        <button className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:shadow-lg transition-all hover:opacity-90">
             <Plus className="w-5 h-5" />
             {t("inventory.add")}
           </button>
@@ -169,7 +149,7 @@ export default function Inventory() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {filteredItems.map((item) => (
+                {filteredItems.map((item: any) => (
                   <tr
                     key={item.id}
                     className="hover:bg-card/50 transition-colors"
@@ -184,17 +164,13 @@ export default function Inventory() {
                       {item.quantity} {item.unit}
                     </td>
                     <td className="px-6 py-4 text-sm text-muted-foreground">
-                      {item.expiryDays} days
+                      {item.expiryDate || "—"}
                     </td>
                     <td className="px-6 py-4 text-sm">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(item.status)}`}
                       >
-                        {item.status === "expiring-soon"
-                          ? t("inventory.expiringSoon")
-                          : item.status === "expired"
-                            ? t("inventory.expired")
-                            : t("inventory.fresh")}
+                        {item.status || t("inventory.fresh")}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm">

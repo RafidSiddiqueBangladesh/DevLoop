@@ -1,23 +1,48 @@
 import { Header } from "@/components/Header";
 import { useTranslation } from "@/lib/useTranslation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Save, X } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Profile() {
   const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
+  const { user, refreshProfile, updateProfile } = useAuth();
   const [formData, setFormData] = useState({
-    fullName: "John Doe",
-    email: "john@example.com",
-    householdSize: "4",
-    dietaryPreferences: "Vegetarian",
-    location: "Dhaka",
-    monthlyBudget: "10000",
+    fullName: "",
+    email: "",
+    householdSize: "",
+    dietaryPreferences: "",
+    location: "",
+    monthlyBudget: "",
   });
 
-  const handleSave = () => {
-    // TODO: Implement API call to save profile
-    console.log("Saving profile:", formData);
+  useEffect(() => {
+    refreshProfile().catch(() => {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        fullName: user.fullName || "",
+        email: user.email || "",
+        householdSize: user.householdSize?.toString() || "",
+        dietaryPreferences: user.dietaryPreferences || "",
+        location: user.location || "",
+        monthlyBudget: user.monthlyBudget?.toString() || "",
+      });
+    }
+  }, [user]);
+
+  const handleSave = async () => {
+    await updateProfile({
+      fullName: formData.fullName,
+      householdSize: formData.householdSize ? Number(formData.householdSize) : undefined,
+      dietaryPreferences: formData.dietaryPreferences,
+      location: formData.location,
+      monthlyBudget: formData.monthlyBudget ? Number(formData.monthlyBudget) : undefined,
+    });
     setIsEditing(false);
   };
 
@@ -195,7 +220,7 @@ export default function Profile() {
                 <div className="flex gap-3 pt-4 border-t border-border">
                   <button
                     onClick={handleSave}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-brand-green-light text-white font-semibold rounded-lg hover:shadow-lg transition-all"
+            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:shadow-lg transition-all hover:opacity-90"
                   >
                     <Save className="w-4 h-4" />
                     {t("common.save")}

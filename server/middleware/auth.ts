@@ -1,15 +1,11 @@
 import { Request, Response, NextFunction } from "express";
-
-/**
- * Authentication middleware
- * TODO: Implement JWT verification when backend is fully set up
- */
+import jwt from "jsonwebtoken";
 
 export interface AuthenticatedRequest extends Request {
   user?: {
     id: string;
     email: string;
-    name: string;
+    fullName?: string;
   };
 }
 
@@ -19,15 +15,16 @@ export const authMiddleware = (
   next: NextFunction,
 ) => {
   try {
-    // TODO: Verify JWT token from request headers
-    // const token = req.headers.authorization?.replace('Bearer ', '');
-    // if (!token) {
-    //   return res.status(401).json({ error: 'No authorization token' });
-    // }
-    // const decoded = jwt.verify(token, process.env.JWT_SECRET!);
-    // req.user = decoded as any;
-
-    // For now, continue without authentication
+    const authHeader = req.headers.authorization || "";
+    const token = authHeader.startsWith("Bearer ")
+      ? authHeader.substring(7)
+      : undefined;
+    if (!token) {
+      return res.status(401).json({ error: "No authorization token" });
+    }
+    const secret = process.env.JWT_SECRET || "dev-secret";
+    const decoded = jwt.verify(token, secret) as any;
+    req.user = { id: decoded.id, email: decoded.email, fullName: decoded.fullName };
     next();
   } catch (error) {
     res.status(401).json({ error: "Unauthorized" });
@@ -36,15 +33,21 @@ export const authMiddleware = (
 
 export const optionalAuth = (
   req: AuthenticatedRequest,
-  res: Response,
+  _res: Response,
   next: NextFunction,
 ) => {
   try {
-    // Optional authentication - doesn't require token
-    // TODO: Implement optional JWT verification
-    next();
-  } catch (error) {
-    // Continue without authentication
-    next();
+    const authHeader = req.headers.authorization || "";
+    const token = authHeader.startsWith("Bearer ")
+      ? authHeader.substring(7)
+      : undefined;
+    if (token) {
+      const secret = process.env.JWT_SECRET || "dev-secret";
+      const decoded = jwt.verify(token, secret) as any;
+      req.user = { id: decoded.id, email: decoded.email, fullName: decoded.fullName };
+    }
+  } catch (_) {
+    // ignore errors; proceed unauthenticated
   }
+  next();
 };

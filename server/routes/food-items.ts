@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { foodItems } from "@shared/foodItems";
+import { foodItems } from "../../shared/foodItems";
 
 /**
  * Get all food items

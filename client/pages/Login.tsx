@@ -3,9 +3,13 @@ import { Link } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { useTranslation } from "@/lib/useTranslation";
 import { Leaf } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const { t } = useTranslation();
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -38,11 +42,11 @@ export default function Login() {
 
     setIsLoading(true);
     try {
-      // TODO: Implement actual login API call
-      console.log("Logging in:", formData);
-      alert("Login successful!");
+      await login(formData.email, formData.password);
+      navigate("/dashboard");
     } catch (error) {
       console.error("Login error:", error);
+      setErrors({ password: (error as Error).message || "Login failed" });
     } finally {
       setIsLoading(false);
     }
@@ -132,7 +136,7 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-2 bg-gradient-to-r from-primary to-brand-green-light text-white font-semibold rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-2 bg-primary text-primary-foreground font-semibold rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90"
               >
                 {isLoading ? t("common.loading") : t("auth.submit")}
               </button>

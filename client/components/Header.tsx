@@ -5,12 +5,14 @@ import { useTranslation } from "@/lib/useTranslation";
 import { Moon, Sun, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/context/AuthContext";
 
 export const Header = () => {
   const { theme, toggleTheme } = useTheme();
   const { language, setLanguage } = useLanguage();
   const { t } = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { token, user, logout } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -43,18 +45,22 @@ export const Header = () => {
           >
             {t("nav.resources")}
           </Link>
-          <Link
-            to="/dashboard"
-            className="text-sm font-medium hover:text-primary transition-colors"
-          >
-            {t("nav.dashboard")}
-          </Link>
-          <Link
-            to="/profile"
-            className="text-sm font-medium hover:text-primary transition-colors"
-          >
-            {t("nav.profile")}
-          </Link>
+          {token && (
+            <>
+              <Link
+                to="/dashboard"
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
+                {t("nav.dashboard")}
+              </Link>
+              <Link
+                to="/profile"
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
+                {t("nav.profile")}
+              </Link>
+            </>
+          )}
         </nav>
 
         {/* Right Actions */}
@@ -83,6 +89,25 @@ export const Header = () => {
               <Sun className="w-5 h-5" />
             )}
           </button>
+
+          {/* Auth actions */}
+          {!token ? (
+            <div className="hidden md:flex items-center gap-2">
+              <Link to="/login" className="px-3 py-2 text-sm rounded-lg hover:bg-accent transition-colors">
+                {t("nav.login")}
+              </Link>
+              <Link to="/register" className="px-3 py-2 text-sm rounded-lg bg-primary text-white">
+                {t("auth.signUp")}
+              </Link>
+            </div>
+          ) : (
+            <div className="hidden md:flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">{user?.fullName || user?.email}</span>
+              <button onClick={logout} className="px-3 py-2 text-sm rounded-lg border border-border hover:bg-accent transition-colors">
+                {t("nav.logout")}
+              </button>
+            </div>
+          )}
 
           {/* Mobile Menu Toggle */}
           <button
@@ -123,20 +148,50 @@ export const Header = () => {
             >
               {t("nav.resources")}
             </Link>
-            <Link
-              to="/dashboard"
-              className="px-4 py-2 text-sm font-medium hover:bg-accent rounded transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {t("nav.dashboard")}
-            </Link>
-            <Link
-              to="/profile"
-              className="px-4 py-2 text-sm font-medium hover:bg-accent rounded transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {t("nav.profile")}
-            </Link>
+            {token ? (
+              <>
+                <Link
+                  to="/dashboard"
+                  className="px-4 py-2 text-sm font-medium hover:bg-accent rounded transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {t("nav.dashboard")}
+                </Link>
+                <Link
+                  to="/profile"
+                  className="px-4 py-2 text-sm font-medium hover:bg-accent rounded transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {t("nav.profile")}
+                </Link>
+                <button
+                  onClick={() => {
+                    logout();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="px-4 py-2 text-sm font-medium hover:bg-accent rounded transition-colors text-left"
+                >
+                  {t("nav.logout")}
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="px-4 py-2 text-sm font-medium hover:bg-accent rounded transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {t("nav.login")}
+                </Link>
+                <Link
+                  to="/register"
+                  className="px-4 py-2 text-sm font-medium hover:bg-accent rounded transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {t("auth.signUp")}
+                </Link>
+              </>
+            )}
           </div>
         </nav>
       )}

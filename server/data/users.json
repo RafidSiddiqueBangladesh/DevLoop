@@ -1,0 +1,12 @@
+[
+  {
+    "id": "c785ddc2-954a-46fe-b24f-d8cd6388e20a",
+    "email": "gg@gmail.com",
+    "passwordHash": "$2b$10$I1snRZF0/q.CFwMU8NqNa.q44I23lEjKdP.taWjn7jFfRfFq.TrdO",
+    "fullName": "jon",
+    "householdSize": 1,
+    "dietaryPreferences": "vegetrian",
+    "location": "dhaka",
+    "monthlyBudget": 10000
+  }
+]

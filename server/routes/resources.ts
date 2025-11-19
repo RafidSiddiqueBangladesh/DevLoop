@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { resources } from "@shared/resources";
+import { resources } from "../../shared/resources";
 
 /**
  * Get all resources
