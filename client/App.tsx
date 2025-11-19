@@ -15,6 +15,7 @@ import Dashboard from "./pages/Dashboard";
 import Inventory from "./pages/Inventory";
 import Resources from "./pages/Resources";
 import Profile from "./pages/Profile";
+import ImageUpload from "./pages/ImageUpload";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ const App = () => (
               <Route path="/inventory" element={<Inventory />} />
               <Route path="/resources" element={<Resources />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/upload" element={<ImageUpload />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
