@@ -37,6 +37,9 @@ export const Header = () => {
           <Link to="/dashboard" className="text-sm font-medium hover:text-primary transition-colors">
             {t('nav.dashboard')}
           </Link>
+          <Link to="/profile" className="text-sm font-medium hover:text-primary transition-colors">
+            {t('nav.profile')}
+          </Link>
         </nav>
 
         {/* Right Actions */}
@@ -109,6 +112,13 @@ export const Header = () => {
               onClick={() => setMobileMenuOpen(false)}
             >
               {t('nav.dashboard')}
+            </Link>
+            <Link
+              to="/profile"
+              className="px-4 py-2 text-sm font-medium hover:bg-accent rounded transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {t('nav.profile')}
             </Link>
           </div>
         </nav>
