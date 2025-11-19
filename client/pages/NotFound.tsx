@@ -1,5 +1,7 @@
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { Link, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Header } from '@/components/Header';
+import { ArrowRight } from 'lucide-react';
 
 const NotFound = () => {
   const location = useLocation();
@@ -12,13 +14,28 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">404</h1>
-        <p className="text-xl text-gray-600 mb-4">Oops! Page not found</p>
-        <a href="/" className="text-blue-500 hover:text-blue-700 underline">
-          Return to Home
-        </a>
+    <div className="flex flex-col min-h-screen bg-background">
+      <Header />
+
+      <div className="flex-1 flex items-center justify-center py-12">
+        <div className="text-center space-y-6 max-w-md px-4">
+          <div className="text-6xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            404
+          </div>
+
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold">Page Not Found</h1>
+            <p className="text-muted-foreground">The page you're looking for doesn't exist or has been moved.</p>
+          </div>
+
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-brand-green-light text-white font-semibold rounded-lg hover:shadow-lg transition-all"
+          >
+            Back to Home
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
       </div>
     </div>
   );
